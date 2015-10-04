@@ -37,8 +37,9 @@ void setup()
     
   wifi->on_connecting([&](const void* message)
   {
-    String text = String("connecting -> ") + wifi->counter;
-    Serial.println(text);
+    char buffer[30];
+    sprintf(buffer, "[%d] connecting -> %s ", wifi->counter, (char*) message);        
+    Serial.println(buffer);
     delay(500);
   });
 
