@@ -8,8 +8,8 @@
 
 WiFiConnector *wifi;
 
-/* 
-  WIFI INFO 
+/*
+  WIFI INFO
   DELETE ALL IF YOU WANT TO USE FULL FUNCTION OF SMARTCONFIG
 */
 
@@ -31,27 +31,27 @@ void setup()
   uint8_t SMARTCONFIG_PIN = 0;
   init_hardware();
   init_wifi(SMARTCONFIG_PIN);
-  
+
   Serial.print("CONNECTING TO ");
   Serial.println(wifi->SSID() + ", " + wifi->psk());
-    
+
   wifi->on_connecting([&](const void* message)
   {
     char buffer[30];
-    sprintf(buffer, "[%d] connecting -> %s ", wifi->counter, (char*) message);        
+    sprintf(buffer, "[%d] connecting -> %s ", wifi->counter, (char*) message);
     Serial.println(buffer);
     delay(500);
   });
 
   wifi->on_connected([&](const void* message)
   {
-    // Print the IP address    
+    // Print the IP address
     Serial.print("WIFI CONECTED: ");
     Serial.println(WiFi.localIP());
-  });  
-  
+  });
+
   wifi->connect();
-  
+
 }
 
 void loop()
