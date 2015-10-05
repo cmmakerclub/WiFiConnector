@@ -33,7 +33,7 @@ void init_hardware()
 void setup()
 {
   init_hardware();
-  init_wifi();
+  init_wifi(0);
 
   Serial.print("CONNECTING TO ");
   Serial.println(wifi.SSID() + ", " + wifi.psk());
