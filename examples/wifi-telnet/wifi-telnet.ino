@@ -4,10 +4,10 @@
 #include <ESP8266WiFi.h>
 #include <WiFiConnector.h>
 
-WiFiConnector *wifi;
 
 //how many clients should be able to telnet to this ESP8266
 #define MAX_SRV_CLIENTS 1
+
 WiFiServer server(23);
 WiFiClient serverClients[MAX_SRV_CLIENTS];
 
@@ -19,6 +19,7 @@ WiFiClient serverClients[MAX_SRV_CLIENTS];
 #define WIFI_SSID        "Nat"
 #define WIFI_PASSPHARSE  "guestguest"
 
+WiFiConnector wifi = WiFiConnector(WIFI_SSID, WIFI_PASSPHARSE);
 #include "init_wifi.h"
 
 void init_hardware()
@@ -31,22 +32,21 @@ void init_hardware()
 
 void setup()
 {
-  uint8_t SMARTCONFIG_PIN = 0;
   init_hardware();
-  init_wifi(SMARTCONFIG_PIN);
+  init_wifi();
 
   Serial.print("CONNECTING TO ");
-  Serial.println(wifi->SSID() + ", " + wifi->psk());
+  Serial.println(wifi.SSID() + ", " + wifi.psk());
 
-  wifi->on_connecting([&](const void* message)
+  wifi.on_connecting([&](const void* message)
   {
     char buffer[30];
-    sprintf(buffer, "[%d] connecting -> %s ", wifi->counter, (char*) message);
+    sprintf(buffer, "[%d] connecting -> %s ", wifi.counter, (char*) message);
     Serial.println(buffer);
     delay(500);
   });
 
-  wifi->on_connected([&](const void* message)
+  wifi.on_connected([&](const void* message)
   {
     // Print the IP address
     Serial.print("WIFI CONNECTED: ");
@@ -61,13 +61,13 @@ void setup()
 
   });
 
-  wifi->connect();
+  wifi.connect();
 
 }
 
 void loop()
 {
-  wifi->loop();
+  wifi.loop();
   uint8_t i;
   //check if there are any new clients
   if (server.hasClient()) {

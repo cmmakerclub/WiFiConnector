@@ -20,7 +20,6 @@ void init_hardware()
   delay(10);
   Serial.println();
   Serial.println("BEGIN");
-  
   // SETUP CALLBACKS
   wifi.on_connecting([&](const void* message)
   {
@@ -33,7 +32,7 @@ void init_hardware()
   wifi.on_connected([&](const void* message)
   {
     // Print the IP address
-    Serial.print("WIFI CONNECTED");
+    Serial.print("WIFI CONNECTED => ");
     Serial.println(WiFi.localIP());
   });
 
