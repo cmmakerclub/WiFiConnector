@@ -20,6 +20,7 @@ void init_hardware()
   delay(10);
   Serial.println();
   Serial.println("BEGIN");
+  
   // SETUP CALLBACKS
   wifi.on_connecting([&](const void* message)
   {
