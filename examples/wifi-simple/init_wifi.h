@@ -11,7 +11,7 @@ void init_wifi(uint8_t smartconfig_pin)
   
   wifi->on_disconnected([&](const void* message)
   {
-    Serial.println("WIFI DISCONECTED.");
+    Serial.println("WIFI DISCONNECTED.");
     // Serial.println ((char*)message);
   });
 

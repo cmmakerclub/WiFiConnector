@@ -1,8 +1,6 @@
 // Copyright Nat Weerawan 2015-2016
 // MIT License
 
-#define WIFI_DEBUG_MODE
-
 #include <ESP8266WiFi.h>
 #include <WiFiConnector.h>
 
@@ -46,7 +44,7 @@ void setup()
   wifi->on_connected([&](const void* message)
   {
     // Print the IP address
-    Serial.print("WIFI CONECTED: ");
+    Serial.print("WIFI CONNECTED");
     Serial.println(WiFi.localIP());
   });
 
