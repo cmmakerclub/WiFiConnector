@@ -32,6 +32,14 @@ void init_hardware()
   delay(10);
   Serial.println();
   Serial.println("BEGIN");
+
+
+  /* 
+    USE EMPTRY CONSTRUCTOR TO USE SMARTCONFIG CONFIGURATIONS
+    LIKE THIS
+    wifi = new WiFiConnector();
+  */
+
   wifi = new WiFiConnector(WIFI_SSID, WIFI_PASSPHARSE);
 
   if (!SPIFFS.begin()) {

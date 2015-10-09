@@ -6,11 +6,17 @@
 
 /*
   WIFI INFO
-  DELETE ALL IF YOU WANT TO USE FULL FUNCTION OF SMARTCONFIG
 */
 
 #define WIFI_SSID        "Nat"
 #define WIFI_PASSPHARSE  "guestguest"
+
+
+/* 
+  USE EMPTRY CONSTRUCTOR TO USE SMARTCONFIG CONFIGURATIONS
+  LIKE THIS
+  WiFiConnector wifi = WiFiConnector();
+*/
 
 WiFiConnector wifi = WiFiConnector(WIFI_SSID, WIFI_PASSPHARSE);
 

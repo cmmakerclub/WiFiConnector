@@ -8,18 +8,21 @@
 //how many clients should be able to telnet to this ESP8266
 #define MAX_SRV_CLIENTS 1
 
-WiFiServer server(23);
-WiFiClient serverClients[MAX_SRV_CLIENTS];
-
-/*
-  WIFI INFO
-  DELETE ALL IF YOU WANT TO USE FULL FUNCTION OF SMARTCONFIG
-*/
-
 #define WIFI_SSID        "Nat"
 #define WIFI_PASSPHARSE  "guestguest"
 
+/* 
+  USE EMPTRY CONSTRUCTOR TO USE SMARTCONFIG CONFIGURATIONS
+  LIKE THIS
+  WiFiConnector wifi = WiFiConnector();
+*/
+
 WiFiConnector wifi = WiFiConnector(WIFI_SSID, WIFI_PASSPHARSE);
+
+WiFiServer server(23);
+WiFiClient serverClients[MAX_SRV_CLIENTS];
+
+
 #include "init_wifi.h"
 
 void init_hardware()
