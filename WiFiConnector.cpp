@@ -33,9 +33,29 @@ THE SOFTWARE.
 
 WiFiConnector::WiFiConnector()
 {
+    use_smartconfig_wifi();
+}
+
+
+WiFiConnector::WiFiConnector(const char* ssid, const char* password)
+{
+    if (ssid == NULL || password == NULL) {
+        use_smartconfig_wifi();
+    }
+    else if (strcmp(ssid, "") == 0 || strcmp(password, "") == 0) {
+        use_smartconfig_wifi();
+    }
+    else {
+        init_config(ssid, password);
+    }
+}
+
+void WiFiConnector::use_smartconfig_wifi()
+{
     static struct station_config conf;
     wifi_station_get_config(&conf);
     const char* ssid = reinterpret_cast<const char*>(conf.ssid);
+
     WIFI_DEBUG_PRINT("SSID (");
     WIFI_DEBUG_PRINT(strlen(ssid));
     WIFI_DEBUG_PRINT("): ");
@@ -50,10 +70,6 @@ WiFiConnector::WiFiConnector()
     init_config(ssid, password);
 }
 
-WiFiConnector::WiFiConnector(const char* ssid, const char* password)
-{
-    init_config(ssid, password);
-}
 
 void WiFiConnector::init_config(const char* ssid, const char* password)
 {

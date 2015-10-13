@@ -117,6 +117,7 @@ private:
 
     unsigned long _retries = 0;
     unsigned long prev_millis;
+    void use_smartconfig_wifi();
 
     void _on_smartconfig_done() {
         if (_user_on_smartconfig_done) {
