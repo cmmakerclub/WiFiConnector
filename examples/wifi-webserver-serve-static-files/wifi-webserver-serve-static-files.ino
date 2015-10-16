@@ -6,11 +6,6 @@
 #include <ESP8266WebServer.h>
 #include "FS.h"
 
-/*
-  WIFI INFO
-  DELETE ALL IF YOU WANT TO USE FULL FUNCTION OF SMARTCONFIG
-*/
-
 #define WIFI_SSID        ""
 #define WIFI_PASSPHARSE  ""
 
@@ -33,13 +28,6 @@ void init_hardware()
   Serial.println();
   Serial.println("BEGIN");
 
-
-  /* 
-    USE EMPTRY CONSTRUCTOR TO USE SMARTCONFIG CONFIGURATIONS
-    LIKE THIS
-    wifi = new WiFiConnector();
-  */
-
   wifi = new WiFiConnector(WIFI_SSID, WIFI_PASSPHARSE);
 
   if (!SPIFFS.begin()) {
@@ -59,10 +47,12 @@ void init_hardware()
   wifi->on_connecting([&](const void* message)
   {
     char buffer[70];
-    sprintf(buffer, "[%d] connecting -> %s ", wifi->counter, (char*) message);
-    Serial.println(buffer);
+    sprintf(buffer, "[%d] connecting -> %s ", wifi->counter);
+    Serial.print(buffer);
+    Serial.println((char*) message);
     delay(500);
   });
+
 
   wifi->on_connected([&](const void* message)
   {

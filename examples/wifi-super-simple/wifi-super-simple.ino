@@ -4,19 +4,9 @@
 #include <ESP8266WiFi.h>
 #include <WiFiConnector.h>
 
-/*
-  WIFI INFO
-*/
+#define WIFI_SSID        ""
+#define WIFI_PASSPHARSE  ""
 
-#define WIFI_SSID        "Nat"
-#define WIFI_PASSPHARSE  "guestguest"
-
-
-/* 
-  USE EMPTRY CONSTRUCTOR TO USE SMARTCONFIG CONFIGURATIONS
-  LIKE THIS
-  WiFiConnector wifi = WiFiConnector();
-*/
 
 WiFiConnector wifi = WiFiConnector(WIFI_SSID, WIFI_PASSPHARSE);
 
@@ -31,10 +21,12 @@ void init_hardware()
   wifi.on_connecting([&](const void* message)
   {
     char buffer[70];
-    sprintf(buffer, "[%d] connecting -> %s ", wifi.counter, (char*) message);
-    Serial.println(buffer);
+    sprintf(buffer, "[%d] connecting -> %s ", wifi.counter);
+    Serial.print(buffer);
+    Serial.println((char*) message);
     delay(500);
   });
+
 
   wifi.on_connected([&](const void* message)
   {

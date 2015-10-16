@@ -6,13 +6,8 @@
 
 WiFiConnector *wifi;
 
-/*
-  WIFI INFO
-  DELETE ALL IF YOU WANT TO USE FULL FUNCTION OF SMARTCONFIG
-*/
-
-#define WIFI_SSID        "Nat"
-#define WIFI_PASSPHARSE  "guestguest"
+#define WIFI_SSID        ""
+#define WIFI_PASSPHARSE  ""
 
 #include "init_wifi.h"
 
@@ -36,8 +31,9 @@ void setup()
   wifi->on_connecting([&](const void* message)
   {
     char buffer[70];
-    sprintf(buffer, "[%d] connecting -> %s ", wifi->counter, (char*) message);
-    Serial.println(buffer);
+    sprintf(buffer, "[%d] connecting -> %s ", wifi->counter);
+    Serial.print(buffer);
+    Serial.println((char*) message);
     delay(500);
   });
 

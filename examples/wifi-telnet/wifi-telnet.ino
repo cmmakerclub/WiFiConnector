@@ -8,14 +8,8 @@
 //how many clients should be able to telnet to this ESP8266
 #define MAX_SRV_CLIENTS 1
 
-#define WIFI_SSID        "Nat"
-#define WIFI_PASSPHARSE  "guestguest"
-
-/* 
-  USE EMPTRY CONSTRUCTOR TO USE SMARTCONFIG CONFIGURATIONS
-  LIKE THIS
-  WiFiConnector wifi = WiFiConnector();
-*/
+#define WIFI_SSID        ""
+#define WIFI_PASSPHARSE  ""
 
 WiFiConnector wifi = WiFiConnector(WIFI_SSID, WIFI_PASSPHARSE);
 
