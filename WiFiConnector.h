@@ -11,8 +11,6 @@ extern "C" {
 }
 #endif
 
-// #define WIFI_DEBUG_MODE
-
 #ifdef WIFI_DEBUG_MODE
     #define WIFI_DEBUG_PRINTER Serial
     #define WIFI_DEBUG_PRINT(...) { WIFI_DEBUG_PRINTER.print(__VA_ARGS__); }
@@ -65,9 +63,6 @@ public:
 
     void enter_smartconfig_mode() {
         _on_smartconfig_waiting();
-        WIFI_DEBUG_PRINTLN("CHANING MODE..");
-        WiFi.mode(WIFI_STA);
-        delay(500);
 
         WIFI_DEBUG_PRINTLN("BEGIN SMART CONFIG" );
         WiFi.beginSmartConfig();
