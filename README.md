@@ -79,4 +79,4 @@ WiFi Connector เป็น Arduino Library สำหรับ ESP8266 ที่
 
 ## อ่านบันเรื่องราว อัพเดต และอ่านเพิ่มเติม
 
-[https://cmmakerclub.com/esp8266/wifi-connector-helper-สำหรับ-esp8266-arduino-ide/](https://wp.me/p4T8Tf-ID)
+[![Join the chat at https://gitter.im/cmmakerclub/WiFiConnector](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/cmmakerclub/WiFiConnector?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
