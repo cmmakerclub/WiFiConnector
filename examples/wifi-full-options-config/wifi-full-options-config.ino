@@ -6,41 +6,48 @@
 
 WiFiConnector *wifi;
 
-#define WIFI_SSID        ""
-#define WIFI_PASSPHARSE  ""
+#define WIFI_SSID        "Nat"
+#define WIFI_PASSPHARSE  "devicenetwork"
+uint8_t SMARTCONFIG_BUTTON_PIN = 2;
 
 #include "init_wifi.h"
 
 void init_hardware()
 {
   Serial.begin(115200);
-  delay(10);
+  delay(1000);
   Serial.println();
-  Serial.println("BEGIN");
+  Serial.println();
+  Serial.println();
+  Serial.println();    
+  Serial.println("will be started in 500ms..");
+  delay(500);  
 }
 
 void setup()
 {
-  uint8_t SMARTCONFIG_PIN = 0;
   init_hardware();
-  init_wifi(SMARTCONFIG_PIN);
+  wifi = init_wifi(WIFI_SSID, WIFI_PASSPHARSE, SMARTCONFIG_BUTTON_PIN);
 
-  Serial.print("CONNECTING TO ");
-  Serial.println(wifi->SSID() + ", " + wifi->psk());
+  Serial.println("BEING CONNECTED TO: ");
+  Serial.println(String(wifi->SSID() + ", " + wifi->psk()));
+  Serial.print("SMARTCONFIG PIN: ");
+  Serial.println(SMARTCONFIG_BUTTON_PIN);
+  Serial.print("CORE FN()");
+  Serial.println(String(WiFi.SSID() + ", " + WiFi.psk()));
+  Serial.print("OK ?");
 
   wifi->on_connecting([&](const void* message)
   {
-    char buffer[70];
-    sprintf(buffer, "[%d] connecting -> %s ", wifi->counter);
-    Serial.print(buffer);
-    Serial.println((char*) message);
+    Serial.print("STATE: CONNECTING -> ");
+    Serial.println(wifi->counter);
     delay(500);
   });
 
   wifi->on_connected([&](const void* message)
   {
     // Print the IP address
-    Serial.print("WIFI CONNECTED");
+    Serial.print("WIFI CONNECTED WITH IP: ");
     Serial.println(WiFi.localIP());
   });
 
@@ -50,5 +57,5 @@ void setup()
 
 void loop()
 {
-  wifi->loop();
+  // wifi->loop();
 }

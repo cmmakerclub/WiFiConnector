@@ -11,6 +11,8 @@ extern "C" {
 }
 #endif
 
+// #define WIFI_DEBUG_MODE
+
 #ifdef WIFI_DEBUG_MODE
     #define WIFI_DEBUG_PRINTER Serial
     #define WIFI_DEBUG_PRINT(...) { WIFI_DEBUG_PRINTER.print(__VA_ARGS__); }
@@ -37,10 +39,8 @@ class WiFiConnector
 {
 public:
     typedef std::function<void(const void*)> wifi_callback_t;
-
     uint32_t counter = 0;
-    WiFiConnector(const char* ssid, const char* password);
-    WiFiConnector();
+    WiFiConnector(const char* ssid, const char* password, uint8_t smartconfig_pin = 0);
     ~WiFiConnector();
     void init_config(const char*, const char*);
     void connect();
@@ -62,9 +62,11 @@ public:
     }
 
     void enter_smartconfig_mode() {
-        _on_smartconfig_waiting();
-
         WIFI_DEBUG_PRINTLN("BEGIN SMART CONFIG" );
+        _on_smartconfig_waiting();
+        WiFi.mode(WIFI_STA);
+        delay(500);
+
         WiFi.beginSmartConfig();
         while (!WiFi.smartConfigDone()) {
             yield();
@@ -74,14 +76,15 @@ public:
     }
 
     String get(String key) {
+        WIFI_DEBUG_PRINT(String("GETTING ...") + key + " = ");
         if (key == "ssid") {
+            WIFI_DEBUG_PRINTLN(this->_ssid);
             return _ssid;
-
         }
         else if (key == "password") {
+            WIFI_DEBUG_PRINTLN(this->_password);
             return _password;
         }
-
     }
     
     String SSID() {
@@ -103,10 +106,10 @@ public:
 protected:
 
 private:
-    String _ssid = "";
-    String _password = "";
     String _mac = "";
-    int SMART_CONFIG_PIN = 0;
+    String _ssid;
+    String _password;    
+    int _smart_config_pin = 0;
 
     wifi_callback_t _user_on_disconnected = NULL;
     wifi_callback_t _user_on_connected  = NULL;
@@ -159,4 +162,4 @@ private:
 
 
 
-#endif//WIFI_CONNECTOR_H
+#endif //WIFI_CONNECTOR_H

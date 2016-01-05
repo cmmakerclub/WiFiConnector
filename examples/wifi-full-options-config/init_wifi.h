@@ -1,6 +1,6 @@
-void init_wifi(uint8_t smartconfig_pin)
+WiFiConnector*  init_wifi(const char* ssid, const char* pass, uint8_t smartconfig_pin)
 {
-  wifi = new WiFiConnector(WIFI_SSID, WIFI_PASSPHARSE);
+  wifi = new WiFiConnector(ssid, pass);
   
   wifi->on_disconnected([&](const void* message)
   {
@@ -23,4 +23,6 @@ void init_wifi(uint8_t smartconfig_pin)
     // Serial.println("CONFIGURING WIFI..");
     // delay(500);
   });
+
+  return wifi;
 }

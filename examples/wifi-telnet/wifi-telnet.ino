@@ -11,7 +11,7 @@
 #define WIFI_SSID        ""
 #define WIFI_PASSPHARSE  ""
 
-WiFiConnector wifi = WiFiConnector(WIFI_SSID, WIFI_PASSPHARSE);
+WiFiConnector *wifi;
 
 WiFiServer server(23);
 WiFiClient serverClients[MAX_SRV_CLIENTS];
@@ -30,20 +30,20 @@ void init_hardware()
 void setup()
 {
   init_hardware();
-  init_wifi(0);
+  wifi = init_wifi(WIFI_SSID, WIFI_PASSPHARSE, 0);
 
   Serial.print("CONNECTING TO ");
-  Serial.println(wifi.SSID() + ", " + wifi.psk());
+  Serial.println(wifi->SSID() + ", " + wifi->psk());
 
-  wifi.on_connecting([&](const void* message)
+  wifi->on_connecting([&](const void* message)
   {
-    char buffer[70];
-    sprintf(buffer, "[%d] connecting -> %s ", wifi.counter, (char*) message);
-    Serial.println(buffer);
+    Serial.print("Connecting -> ");
+    Serial.println(wifi->counter);
+    Serial.println((char*) message);
     delay(500);
   });
 
-  wifi.on_connected([&](const void* message)
+  wifi->on_connected([&](const void* message)
   {
     // Print the IP address
     Serial.print("WIFI CONNECTED: ");
@@ -58,13 +58,13 @@ void setup()
 
   });
 
-  wifi.connect();
+  wifi->connect();
 
 }
 
 void loop()
 {
-  wifi.loop();
+  wifi->loop();
   uint8_t i;
   //check if there are any new clients
   if (server.hasClient()) {

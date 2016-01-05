@@ -30,15 +30,11 @@ THE SOFTWARE.
 
 #include "WiFiConnector.h"
 
-
-WiFiConnector::WiFiConnector()
+WiFiConnector::WiFiConnector(const char* ssid, const char* password, uint8_t smartconfig_pin)
 {
-    use_smartconfig_wifi();
-}
-
-
-WiFiConnector::WiFiConnector(const char* ssid, const char* password)
-{
+    WIFI_DEBUG_PRINTLN("__CALLING WiFiConnector(ssid, pwd, smartconfig)");
+    this->_smart_config_pin = smartconfig_pin;
+    WIFI_DEBUG_PRINTLN("__CALLING WiFiConnector(ssid, password)");
     if (ssid == NULL || password == NULL) {
         use_smartconfig_wifi();
     }
@@ -46,52 +42,62 @@ WiFiConnector::WiFiConnector(const char* ssid, const char* password)
         use_smartconfig_wifi();
     }
     else {
+        WIFI_DEBUG_PRINTLN("GOT SSID & PASSWORD");
         init_config(ssid, password);
     }
 }
 
+
+
 void WiFiConnector::use_smartconfig_wifi()
 {
-    static struct station_config conf;
-    wifi_station_get_config(&conf);
-    const char* ssid = reinterpret_cast<const char*>(conf.ssid);
+    WIFI_DEBUG_PRINTLN("__CALLING use_smartconfig_wifi()");
+    const char* ssid = WiFi.SSID().c_str();
 
     WIFI_DEBUG_PRINT("SSID (");
     WIFI_DEBUG_PRINT(strlen(ssid));
     WIFI_DEBUG_PRINT("): ");
     WIFI_DEBUG_PRINTLN(ssid);
 
-    const char* password = reinterpret_cast<const char*>(conf.password);
+    const char* password = WiFi.psk().c_str();
     WIFI_DEBUG_PRINT("PASSWORD (");
     WIFI_DEBUG_PRINT(strlen(password));
     WIFI_DEBUG_PRINT("): ");
     WIFI_DEBUG_PRINTLN(password);
 
-    init_config(ssid, password);
+    init_config(WiFi.SSID().c_str(), WiFi.psk().c_str());
 }
 
 
 void WiFiConnector::init_config(const char* ssid, const char* password)
 {
-    pinMode(0, INPUT_PULLUP);
+    pinMode(_smart_config_pin, INPUT_PULLUP);
+
+    this->_ssid  = String(ssid);
+    this->_password  = String(password);
+
+    WIFI_DEBUG_PRINT("__CALLING init_config(");
+    WIFI_DEBUG_PRINT(this->_ssid);
+    WIFI_DEBUG_PRINT(", ");
+    WIFI_DEBUG_PRINT(this->_password);
+    WIFI_DEBUG_PRINTLN(")");
     prev_millis = millis();
 
-    _ssid = String(ssid);
-    _password = String(password);
+    WIFI_DEBUG_PRINT("INIT CONFIG WITH SSID: ");
+    WIFI_DEBUG_PRINTLN(this->_ssid);
 
-    WIFI_DEBUG_PRINT("SSID: ");
-    WIFI_DEBUG_PRINTLN(ssid);
-
-    WIFI_DEBUG_PRINT("password: ");
-    WIFI_DEBUG_PRINTLN(_password);
+    WIFI_DEBUG_PRINT("INIT CONFIG WITH password: ");
+    WIFI_DEBUG_PRINTLN(this->_password);
 }
 
 void WiFiConnector::begin()
 {
+    WIFI_DEBUG_PRINTLN("__CALLING begin()");
     _connect();
 }
 void WiFiConnector::connect()
 {
+    WIFI_DEBUG_PRINTLN("__CALLING connect()");
     _connect();
 }
 
@@ -146,15 +152,21 @@ void WiFiConnector::loop()
 
 void WiFiConnector::_connect()
 {
+
+    WIFI_DEBUG_PRINT("__CALLING _connect() with: ");
+    WIFI_DEBUG_PRINT(_ssid);
+    WIFI_DEBUG_PRINT(", ");
+    WIFI_DEBUG_PRINTLN(_password);
+
     _retries = 0;
-    WiFi.begin(_ssid.c_str(), _password.c_str());
     this->counter = 0;
+    WiFi.begin(this->_ssid.c_str(), this->_password.c_str());
 
     while ((WiFi.status() != WL_CONNECTED))
     {
         if (_user_on_connecting != NULL)
         {
-            static char buf[20];
+            static char buf[40];
             if (WiFi.status() == WL_CONNECT_FAILED) {
                 strcpy(buf, "(4) WL_CONNECT_FAILED");
             }
@@ -178,10 +190,8 @@ void WiFiConnector::_connect()
             _user_on_connecting((void*) buf);
         }
 
-        WIFI_DEBUG_PRINT(WiFi.status());
-        WIFI_DEBUG_PRINTLN(" ");
         _retries++;
-        this->smartconfig_check(SMART_CONFIG_PIN);
+        this->smartconfig_check(_smart_config_pin);
         yield();
     }
 

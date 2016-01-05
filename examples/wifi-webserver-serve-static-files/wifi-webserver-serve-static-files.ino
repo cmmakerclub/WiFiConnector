@@ -46,9 +46,8 @@ void init_hardware()
   // SETUP CALLBACKS
   wifi->on_connecting([&](const void* message)
   {
-    char buffer[70];
-    sprintf(buffer, "[%d] connecting -> %s ", wifi->counter);
-    Serial.print(buffer);
+    Serial.println("Connecting -> ");
+    Serial.println(wifi->counter);
     Serial.println((char*) message);
     delay(500);
   });
