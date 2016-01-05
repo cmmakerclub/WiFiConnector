@@ -1,6 +1,6 @@
 WiFiConnector*  init_wifi(const char* ssid, const char* pass, uint8_t smartconfig_pin)
 {
-  wifi = new WiFiConnector(ssid, pass);
+  WiFiConnector *wifi = new WiFiConnector(ssid, pass, smartconfig_pin);
   
   wifi->on_disconnected([&](const void* message)
   {

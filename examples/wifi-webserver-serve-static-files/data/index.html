@@ -1,39 +1,15 @@
-<html lang=en-us>
-
+<!DOCTYPE html>
+<html class="no-js" lang="en">
 <head>
-	<title>AngularJS on the ESP8266</title>
-	<script type="text/javascript" src="angular.min.js.gz"></script>
-
-	<style type="text/css">
-		.millis {
-			font-size: 100px;
-		}
-
-	</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width" />
+  <title>example-react-project</title>
+  
+  <link type="text/css" rel="stylesheet" media="all" href="css/app.0.0.0.css" />
+  
 </head>
-
 <body>
-	<div ng-app="myApp" ng-controller="myCtrl">
-		<div class="millis"> {{ json.millis }} </div>
-	</div>
-
+  <div id="app"></div>
+  <script src="js/app.0.0.0.js"></script>
 </body>
-
-<script type="text/javascript">
-	var app = angular.module('myApp', []);
-	app.controller('myCtrl', function($scope, $http, $interval) {
-		var get_data = function(argument) {
-			$http.get("/test").success(function (argument) {
-				console.log(argument);
-				$scope.json = argument;
-			}).error(function (argument) {
-				$scope.error = true;
-			});
-		}
-
-		$interval(function (argument) {
-			get_data(argument);
-		}, 300);
-	});
-
-</script>
+</html>

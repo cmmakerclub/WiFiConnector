@@ -4,10 +4,11 @@
 #include <ESP8266WiFi.h>
 #include <WiFiConnector.h>
 #include <ESP8266WebServer.h>
+#include "init_wifi.h"
 #include "FS.h"
 
-#define WIFI_SSID        ""
-#define WIFI_PASSPHARSE  ""
+#define WIFI_SSID        "Nat"
+#define WIFI_PASSPHARSE  "devicenetwork"
 
 
 WiFiConnector *wifi;
@@ -28,7 +29,7 @@ void init_hardware()
   Serial.println();
   Serial.println("BEGIN");
 
-  wifi = new WiFiConnector(WIFI_SSID, WIFI_PASSPHARSE);
+  wifi = init_wifi(WIFI_SSID, WIFI_PASSPHARSE, 2);
 
   if (!SPIFFS.begin()) {
     fail("SPIFFS init failed");
@@ -46,8 +47,9 @@ void init_hardware()
   // SETUP CALLBACKS
   wifi->on_connecting([&](const void* message)
   {
-    Serial.println("Connecting -> ");
+    Serial.print("Connecting -> ");
     Serial.println(wifi->counter);
+    Serial.print("STATE: ");
     Serial.println((char*) message);
     delay(500);
   });
@@ -71,6 +73,8 @@ void init_hardware()
     } );    
     server.serveStatic("/", SPIFFS, "/");
     server.begin();
+
+    Serial.println("SERVER BeGIN");
   });
 
 }
@@ -88,6 +92,6 @@ void setup()
 
 void loop()
 {
-  wifi->loop();
   server.handleClient();
+  wifi->loop();
 }

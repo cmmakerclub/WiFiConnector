@@ -1,0 +1,39 @@
+<html lang=en-us>
+
+<head>
+	<title>AngularJS on the ESP8266</title>
+	<script type="text/javascript" src="angular.min.js"></script>
+
+	<style type="text/css">
+		.millis {
+			font-size: 100px;
+		}
+
+	</style>
+</head>
+
+<body>
+	<div ng-app="myApp" ng-controller="myCtrl">
+		<div class="millis"> {{ json.millis }} </div>
+	</div>
+
+</body>
+
+<script type="text/javascript">
+	var app = angular.module('myApp', []);
+	app.controller('myCtrl', function($scope, $http, $interval) {
+		var get_data = function(argument) {
+			$http.get("/test").success(function (argument) {
+				console.log(argument);
+				$scope.json = argument;
+			}).error(function (argument) {
+				$scope.error = true;
+			});
+		}
+
+		$interval(function (argument) {
+			get_data(argument);
+		}, 300);
+	});
+
+</script>
