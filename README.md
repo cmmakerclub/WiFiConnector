@@ -33,8 +33,9 @@ WiFi Connector เป็น Arduino Library สำหรับ ESP8266 ที่
 	
 	#define WIFI_SSID        "Nat"
 	#define WIFI_PASSPHARSE  "guestguest"
+	#define SMART_CONFIG_PIN 2
 	
-	WiFiConnector wifi = WiFiConnector(WIFI_SSID, WIFI_PASSPHARSE);
+	WiFiConnector wifi = WiFiConnector(WIFI_SSID, WIFI_PASSPHARSE, SMART_CONFIG_PIN);
 	
 	void init_hardware()
 	{
