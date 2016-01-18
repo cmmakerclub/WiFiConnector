@@ -68,9 +68,18 @@ void init_hardware()
       server.send ( 200, "text/plain", buff );
     } );
 
+    server.on ( "/atmosphere", []() {
+      char buff[100];
+      String ms = String(millis());
+      sprintf(buff, "{\"millis\": %s, \"temp\": %s, \"humid\": %s}", 
+        ms.c_str(), "99.9", "55.5");
+      server.send ( 200, "text/plain", buff );
+    });    
+
     server.on ( "/hello", []() {
       server.send ( 200, "text/plain", String("Hi, there"));
     } );    
+
     server.serveStatic("/", SPIFFS, "/");
     server.begin();
 
