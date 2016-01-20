@@ -135,6 +135,7 @@ void WiFiConnector::on_smartconfig_done(wifi_callback_t callback)
 
 void WiFiConnector::loop()
 {
+
     if (WiFi.status() == WL_CONNECTED)
     {
         // return WiFi.status();
@@ -161,6 +162,13 @@ void WiFiConnector::_connect()
     _retries = 0;
     this->counter = 0;
     WiFi.begin(this->_ssid.c_str(), this->_password.c_str());
+    _ticker.detach();
+    pinMode(16, OUTPUT);
+    digitalWrite(16, LOW);
+    _ticker.attach_ms(300, [&]() {
+        int state = digitalRead(16);  // get the current state of GPIO16 pin
+        digitalWrite(16, !state);     // set pin to the opposite state
+    });
 
     while ((WiFi.status() != WL_CONNECTED))
     {
@@ -191,7 +199,9 @@ void WiFiConnector::_connect()
         }
 
         _retries++;
-        this->smartconfig_check(_smart_config_pin);
+        this->long_press_check(_smart_config_pin, [&]() {
+            enter_smartconfig_mode();
+        });
         yield();
     }
 
@@ -200,6 +210,10 @@ void WiFiConnector::_connect()
     {
         _user_on_connected("class: WIFI connected.");
     }
+
+    WiFi.mode(WIFI_STA);
+    WiFi.enableAP(false);
+    _ticker.detach();
 
 }
 

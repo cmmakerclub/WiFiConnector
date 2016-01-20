@@ -2,7 +2,9 @@
 #ifndef WIFI_CONNECTOR_H
 #define WIFI_CONNECTOR_H
 
-#include "ESP8266WiFi.h"
+#include <ESP8266WiFi.h>
+#include <ESP8266WebServer.h>
+#include <Ticker.h>
 #include <functional>
 
 #ifdef ESP8266
@@ -39,6 +41,7 @@ class WiFiConnector
 {
 public:
     typedef std::function<void(const void*)> wifi_callback_t;
+    typedef std::function<void(void)> void_callback_t;
     uint32_t counter = 0;
     WiFiConnector(const char* ssid, const char* password, uint8_t smartconfig_pin = 0);
     ~WiFiConnector();
@@ -47,13 +50,14 @@ public:
     void begin();
     void loop();
 
-    void smartconfig_check(uint8_t pin) {
+    void long_press_check(uint8_t pin, void_callback_t callback) {
         pinMode(pin, INPUT_PULLUP);
         long memo = millis();
         if (digitalRead(pin) == LOW) {
           while (digitalRead(pin) == LOW) {
             if (millis() - memo > 2000) {
-                enter_smartconfig_mode();
+                Serial.println("LONG PRESSED > 2000");
+                callback();
                 break;
             }
             yield();
@@ -62,9 +66,19 @@ public:
     }
 
     void enter_smartconfig_mode() {
+        // WiFi.disconnect();
+        Serial.println("CALLBACK STARTED.");
+        WiFi.mode(WIFI_STA);
+        _ticker.detach();   
+        pinMode(16, OUTPUT);
+        digitalWrite(16, LOW);
+        // flip the pin every 0.3s
+        _ticker.attach_ms(20, [&]() {
+            int state = digitalRead(16);  // get the current state of GPIO16 pin
+            digitalWrite(16, !state);     // set pin to the opposite state
+        });    
         WIFI_DEBUG_PRINTLN("BEGIN SMART CONFIG" );
         _on_smartconfig_waiting();
-        WiFi.mode(WIFI_STA);
         delay(500);
 
         WiFi.beginSmartConfig();
@@ -106,6 +120,9 @@ public:
 protected:
 
 private:
+    ESP8266WebServer *_server;
+    bool _server_started = false;
+    Ticker _ticker;
     String _mac = "";
     String _ssid;
     String _password;    
@@ -123,6 +140,8 @@ private:
     void use_smartconfig_wifi();
 
     void _on_smartconfig_done() {
+        // WiFi.disconnect();
+        // WiFi.mode(WIFI_STA);
         if (_user_on_smartconfig_done) {
             _user_on_smartconfig_done((void*) "done");
         }
@@ -147,6 +166,75 @@ private:
     void _on_smartconfig_processing() {
         if (_user_on_smartconfig_processing) {
             _user_on_smartconfig_processing((void*) "doing");
+        }
+
+        long_press_check(_smart_config_pin, [&]() {
+            WiFi.persistent(false);
+            _ticker.detach();
+            pinMode(16, OUTPUT);
+            digitalWrite(16, LOW);
+            WiFi.stopSmartConfig();
+            // WiFi.disconnect();
+            // WiFi.softAPdisconnect();
+            delay(1000);
+            _ticker.attach_ms(1000, [&]() {
+                int state = digitalRead(16);  // get the current state of GPIO16 pin
+                digitalWrite(16, !state);     // set pin to the opposite state
+            });
+
+            // WiFi.mode(WIFI_AP);
+            // delay(3000);
+            const String ap = String(String("NAT_") + millis());
+            Serial.println(ap.c_str());
+            WiFi.softAP(ap.c_str());
+            delay(3000);
+            IPAddress myIP = WiFi.softAPIP();
+            Serial.print("AP IP address: ");
+            Serial.println(myIP);
+            _server = new ESP8266WebServer(80);
+
+            _server->on("/inline", [&](){
+                _server->send(200, "text/plain", "this works as well");
+            });
+
+            _server->on("/setting", [&](){
+                String SSID = _server->arg("ssid");
+                String PASSPHARSE = _server->arg("password");
+                SSID.replace("+", " ");
+                SSID.replace("%40", "@");
+                Serial.println(SSID);
+                Serial.println(PASSPHARSE);
+                _server->send(200, "text/html", "");
+
+                if (SSID != NULL && PASSPHARSE != NULL) {
+                    WiFi.persistent(true);
+                    Serial.println("GOT SSID");
+                    WiFi.begin(SSID.c_str(), PASSPHARSE.c_str());
+                    _server->sendContent("OK");
+                    _server->client().stop(); // Stop is needed because we sent no content length
+                    ESP.reset();
+                }
+                else {
+                  _server->sendContent(
+                    "<html><head><title>Setting</title></head><body>"
+                    "\r\n<br /><form method='POST' action='setting'><h4>Connect to network:</h4>"
+                    "<input type='text' placeholder='network' name='ssid'/>"
+                    "<br /><input type='password' placeholder='password' name='password'/>"
+                    "<br /><input type='submit' value='Connect/Disconnect'/></form>"
+                    "<p>You may want to <a href='/'>return to the home page</a>.</p>"
+                    "</body></html>"
+                  );
+                    _server->client().stop(); // Stop is needed because we sent no content length
+                }
+
+            });
+
+            _server_started = true;
+            _server->begin();
+            Serial.println("SERVER STARTED");
+        });
+        if (_server_started) {
+            _server->handleClient();
         }
     }
 
