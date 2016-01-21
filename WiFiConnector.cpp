@@ -151,6 +151,30 @@ void WiFiConnector::loop()
     }
 }
 
+void WiFiConnector::setLed(uint8_t led) {
+    _ledPin = led;
+}
+
+void WiFiConnector::blink(uint32_t ms) {
+    if(_ledPin != 255) {
+        _ticker.detach();
+
+        pinMode(_ledPin, OUTPUT);
+        digitalWrite(_ledPin, LOW);
+
+        auto lambda = [](int _pin) {
+            int state = digitalRead(_pin);  // get the current state of GPIOpin pin
+            digitalWrite(_pin, !state);     // set pin to the opposite state
+        };
+
+        auto function  = static_cast<void (*)(int)>(lambda);
+        _ticker.attach_ms(ms, function, _ledPin);
+    }
+    else {
+        
+    }
+}
+
 void WiFiConnector::_connect()
 {
 
@@ -162,13 +186,8 @@ void WiFiConnector::_connect()
     _retries = 0;
     this->counter = 0;
     WiFi.begin(this->_ssid.c_str(), this->_password.c_str());
-    _ticker.detach();
-    pinMode(16, OUTPUT);
-    digitalWrite(16, LOW);
-    _ticker.attach_ms(300, [&]() {
-        int state = digitalRead(16);  // get the current state of GPIO16 pin
-        digitalWrite(16, !state);     // set pin to the opposite state
-    });
+
+    blink(300);
 
     while ((WiFi.status() != WL_CONNECTED))
     {

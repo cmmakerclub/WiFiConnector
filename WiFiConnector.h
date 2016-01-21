@@ -66,17 +66,10 @@ public:
     }
 
     void enter_smartconfig_mode() {
-        // WiFi.disconnect();
-        Serial.println("CALLBACK STARTED.");
         WiFi.mode(WIFI_STA);
-        _ticker.detach();   
-        pinMode(16, OUTPUT);
-        digitalWrite(16, LOW);
-        // flip the pin every 0.3s
-        _ticker.attach_ms(20, [&]() {
-            int state = digitalRead(16);  // get the current state of GPIO16 pin
-            digitalWrite(16, !state);     // set pin to the opposite state
-        });    
+
+        blink(20);
+
         WIFI_DEBUG_PRINTLN("BEGIN SMART CONFIG" );
         _on_smartconfig_waiting();
         delay(500);
@@ -117,9 +110,12 @@ public:
     void on_smartconfig_waiting(wifi_callback_t callback = NULL);
     void on_smartconfig_done(wifi_callback_t callback = NULL);
 
+    void setLed(uint8_t);
+
 protected:
 
 private:
+    int _ledPin = 255;
     ESP8266WebServer *_server;
     bool _server_started = false;
     Ticker _ticker;
@@ -138,6 +134,7 @@ private:
     unsigned long _retries = 0;
     unsigned long prev_millis;
     void use_smartconfig_wifi();
+    void blink(uint32_t);
 
     void _on_smartconfig_done() {
         // WiFi.disconnect();
@@ -170,17 +167,10 @@ private:
 
         long_press_check(_smart_config_pin, [&]() {
             WiFi.persistent(false);
-            _ticker.detach();
-            pinMode(16, OUTPUT);
-            digitalWrite(16, LOW);
             WiFi.stopSmartConfig();
             // WiFi.disconnect();
             // WiFi.softAPdisconnect();
-            delay(1000);
-            _ticker.attach_ms(1000, [&]() {
-                int state = digitalRead(16);  // get the current state of GPIO16 pin
-                digitalWrite(16, !state);     // set pin to the opposite state
-            });
+            blink(1000);
 
             // WiFi.mode(WIFI_AP);
             // delay(3000);
