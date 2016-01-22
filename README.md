@@ -22,61 +22,125 @@ WiFi Connector เป็น Arduino Library สำหรับ ESP8266 ที่
 
 ## ตัวอย่างการใช้งาน
 
-	
-	#include <ESP8266WiFi.h>
-	#include <WiFiConnector.h>
-	
-	/*
-	  WIFI INFO
-	  DELETE ALL IF YOU WANT TO USE FULL FUNCTION OF SMARTCONFIG
-	*/
-	
-	#define WIFI_SSID        "Nat"
-	#define WIFI_PASSPHARSE  "guestguest"
-	#define SMART_CONFIG_PIN 2
-	
-	WiFiConnector wifi = WiFiConnector(WIFI_SSID, WIFI_PASSPHARSE, SMART_CONFIG_PIN);
-	
-	void init_hardware()
-	{
-	  Serial.begin(115200);
-	  delay(10);
-	  Serial.println();
-	  Serial.println("BEGIN");
-	  
-	  // SETUP CALLBACKS
-	  wifi.on_connecting([&](const void* message)
-	  {
-	    char buffer[30];
-	    sprintf(buffer, "[%d] connecting -> %s ", wifi.counter, (char*) message);
-	    Serial.println(buffer);
-	    delay(500);
-	  });
-	
-	  wifi.on_connected([&](const void* message)
-	  {
-	    // Print the IP address
-	    Serial.print("WIFI CONNECTED => ");
-	    Serial.println(WiFi.localIP());
-	  });
-	
-	}
-	
-	void setup()
-	{
-	  init_hardware();
-	
-	  Serial.print("CONNECTING TO ");
-	  Serial.println(wifi.SSID() + ", " + wifi.psk());
-	
-	  wifi.connect();
-	
-	}
-	
-	void loop()
-	{
-	  wifi.loop();
-	}
+    	
+    // Copyright Nat Weerawan 2015-2016
+    // MIT License
+
+    #include <ESP8266WiFi.h>
+    #include <WiFiConnector.h>
+
+    WiFiConnector *wifi;
+
+    #define WIFI_SSID        ""
+    #define WIFI_PASSPHARSE  ""
+    uint8_t SMARTCONFIG_BUTTON_PIN = 0;
+
+    #include "init_wifi.h"
+
+    void init_hardware()
+    {
+      Serial.begin(115200);
+      delay(1000);
+      Serial.flush();
+      Serial.println();
+      Serial.println();
+      Serial.println("will be started in 500ms..");
+    }
+
+    void setup()
+    {
+      WiFi.enableAP(false);
+      WiFi.onEvent([](WiFiEvent_t event) {
+        Serial.println(event);
+        switch (event) {
+          case WIFI_EVENT_STAMODE_CONNECTED:
+            Serial.print(millis());
+            Serial.print(" => ");
+
+            Serial.println("WIFI_EVENT_STAMODE_CONNECTED");
+            break;
+          case WIFI_EVENT_STAMODE_DISCONNECTED:
+            Serial.print(millis());
+            Serial.print(" => ");
+
+            Serial.println("WiFi lost connection");
+            break;
+          case WIFI_EVENT_STAMODE_AUTHMODE_CHANGE:
+            Serial.print(millis());
+            Serial.print(" => ");
+
+            Serial.println("WIFI_EVENT_STAMODE_AUTHMODE_CHANGE");
+            break;
+          case WIFI_EVENT_STAMODE_GOT_IP:
+            Serial.print(millis());
+            Serial.print(" => ");
+            Serial.println("WIFI_EVENT_STAMODE_GOT_IP");
+            Serial.println(WiFi.localIP());
+            break;
+          case WIFI_EVENT_STAMODE_DHCP_TIMEOUT:
+            Serial.print(millis());
+            Serial.print(" => ");
+
+            Serial.println("WIFI_EVENT_STAMODE_DHCP_TIMEOUT");
+            break;
+          case WIFI_EVENT_SOFTAPMODE_STACONNECTED:
+            Serial.print(millis());
+            Serial.print(" => ");
+
+            Serial.println("WIFI_EVENT_SOFTAPMODE_STACONNECTED");
+            break;
+          case WIFI_EVENT_SOFTAPMODE_STADISCONNECTED:
+            Serial.print(millis());
+            Serial.print(" => ");
+
+            Serial.println("WIFI_EVENT_SOFTAPMODE_STADISCONNECTED");
+            break;
+          case WIFI_EVENT_SOFTAPMODE_PROBEREQRECVED:
+            // Serial.print(" => ");
+            // Serial.println("WIFI_EVENT_SOFTAPMODE_PROBEREQRECVED");
+            break;
+          case WIFI_EVENT_MAX:
+            Serial.print(millis());
+            Serial.print(" => ");
+
+            Serial.println("WIFI_EVENT_MAX");
+            break;
+        }
+      });
+      init_hardware();
+      delay(200);
+      WiFi.printDiag(Serial);
+      wifi = init_wifi(WIFI_SSID, WIFI_PASSPHARSE, SMARTCONFIG_BUTTON_PIN);
+      Serial.println("BEING CONNECTED TO: ");
+      Serial.println(String(wifi->SSID() + ", " + wifi->psk()));
+      Serial.print("SMARTCONFIG PIN: ");
+      Serial.println(SMARTCONFIG_BUTTON_PIN);
+      Serial.print("CORE FN()");
+      Serial.println(String(WiFi.SSID() + ", " + WiFi.psk()));
+      Serial.print("OK ?");
+
+      wifi->on_connecting([&](const void* message)
+      {
+        Serial.print("STATE: CONNECTING -> ");
+        Serial.println(wifi->counter);
+        delay(500);
+      });
+
+      wifi->on_connected([&](const void* message)
+      {
+        // Print the IP address
+        Serial.print("WIFI CONNECTED WITH IP: ");
+        Serial.println(WiFi.localIP());
+      });
+
+      wifi->connect();
+
+    }
+
+    void loop()
+    {
+      wifi->loop();
+    }
 
 ## อ่านบันเรื่องราว อัพเดต และอ่านเพิ่มเติม
 
