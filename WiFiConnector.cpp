@@ -231,7 +231,6 @@ void WiFiConnector::_connect()
     }
 
     WiFi.mode(WIFI_STA);
-    WiFi.enableAP(false);
     _ticker.detach();
 
 }
