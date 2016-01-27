@@ -92,7 +92,20 @@ public:
             WIFI_DEBUG_PRINTLN(this->_password);
             return _password;
         }
+        else if (key == "mac") {
+            uint8_t mac[6];
+            WiFi.macAddress(mac);
+            String macAddr;
+            for (int i = 0; i < 6; ++i)
+            {
+               macAddr += String(mac[i], 16);
+            }
+            // WiFi.macAddress();
+            return macAddr;
+        } 
     }
+
+
     
     String SSID() {
         return this->get("ssid");
@@ -187,7 +200,7 @@ private:
                 _server->send(200, "text/plain", "this works as well");
             });
 
-            _server->on("/setting", [&](){
+            _server->on("/", [&](){
                 String SSID = _server->arg("ssid");
                 String PASSPHARSE = _server->arg("password");
                 SSID.replace("+", " ");
@@ -214,7 +227,8 @@ private:
                     "<p>You may want to <a href='/'>return to the home page</a>.</p>"
                     "</body></html>"
                   );
-                    _server->client().stop(); // Stop is needed because we sent no content length
+                  
+                  _server->client().stop(); // Stop is needed because we sent no content length
                 }
 
             });
@@ -236,6 +250,7 @@ private:
     }
 
     void _connect();
+
 };
 
 
