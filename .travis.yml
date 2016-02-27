@@ -11,6 +11,8 @@ cache:
 
 env:
     - PLATFORMIO_CI_SRC=examples/wifi-full-options-config
+    - PLATFORMIO_CI_SRC=examples/wifi-telnet
+    - PLATFORMIO_CI_SRC=examples/wifi-webserver-serve-static-files
 install:
     - pip install -U platformio
 script:
