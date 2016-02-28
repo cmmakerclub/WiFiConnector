@@ -1,12 +1,12 @@
 {
     "name": "CMMC WiFi Connector",
     "keywords": "wifi, wifi manager, wifi connector",
-    "description": "A WiFi Connect Helper (formerly known as WiFi Connector)",
+    "description": "A WiFi Connect Helper (formerly known as WiFi Connector ESP8266)",
     "repository":
     {
       "type": "git",
       "url": "https://github.com/cmmakerclub/WiFiConnector.git"
     },
     "frameworks": "arduino",
-    "platforms": "esp8266"
+    "platforms": "espressif"
 }
