@@ -34,6 +34,7 @@ WiFiConnector::WiFiConnector(const char* ssid, const char* password, uint8_t sma
 {
     WIFI_DEBUG_PRINTLN("__CALLING WiFiConnector(ssid, pwd, smartconfig)");
     this->_smart_config_pin = smartconfig_pin;
+    pinMode(smartconfig_pin, INPUT_PULLUP);
     WIFI_DEBUG_PRINTLN("__CALLING WiFiConnector(ssid, password)");
     if (ssid == NULL || password == NULL) {
         use_smartconfig_wifi();

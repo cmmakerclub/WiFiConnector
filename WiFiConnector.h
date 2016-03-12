@@ -51,7 +51,6 @@ public:
     void loop();
 
     void long_press_check(uint8_t pin, void_callback_t callback) {
-        pinMode(pin, INPUT_PULLUP);
         long memo = millis();
         if (digitalRead(pin) == LOW) {
           while (digitalRead(pin) == LOW) {
@@ -62,7 +61,9 @@ public:
             }
             yield();
           }
+            yield();
         }
+        yield();
     }
 
     void enter_smartconfig_mode() {
@@ -78,6 +79,7 @@ public:
         while (!WiFi.smartConfigDone()) {
             yield();
             _on_smartconfig_processing();
+            yield();
         }
         _on_smartconfig_done();
     }
@@ -237,6 +239,7 @@ private:
             _server->begin();
             Serial.println("SERVER STARTED");
         });
+        
         if (_server_started) {
             _server->handleClient();
         }

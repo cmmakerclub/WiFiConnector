@@ -20,8 +20,9 @@ WiFiConnector*  init_wifi(const char* ssid, const char* pass, uint8_t smartconfi
 
   wifi->on_smartconfig_processing([&](const void* message)
   {
-    // Serial.println("CONFIGURING WIFI..");
-    // delay(500);
+    Serial.print(millis());
+    Serial.println(" PROCESSING SMARTCONFIG...");
+    delay(100);
   });
 
   return wifi;
