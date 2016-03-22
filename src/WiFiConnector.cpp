@@ -30,6 +30,8 @@ THE SOFTWARE.
 
 #include "WiFiConnector.h"
 
+static WiFiConnector* _wifi_connector = NULL;
+
 WiFiConnector::WiFiConnector(const char* ssid, const char* password, uint8_t smartconfig_pin)
 {
     WIFI_DEBUG_PRINTLN("__CALLING WiFiConnector(ssid, pwd, smartconfig)");
@@ -46,6 +48,8 @@ WiFiConnector::WiFiConnector(const char* ssid, const char* password, uint8_t sma
         WIFI_DEBUG_PRINTLN("GOT SSID & PASSWORD");
         init_config(ssid, password);
     }
+
+    _wifi_connector = this;
 }
 
 
