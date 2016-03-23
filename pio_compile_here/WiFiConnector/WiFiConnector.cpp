@@ -54,9 +54,9 @@ void WiFiConnector::init() {
 
 void WiFiConnector::loop() {
   if (_initialised == false) {
-    // if (millis() % 1000 == 0) {
-    //   Serial.println("not initialized");
-    // }
+    if (millis() % 1000 == 0) {
+      Serial.println("not initialized. return");
+    }
     return;
   }
 }

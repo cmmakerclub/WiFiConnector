@@ -29,5 +29,5 @@ void setup()
 
 void loop()
 {
-  // wifi.loop();
+  wifi.loop();
 }
