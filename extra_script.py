@@ -1,13 +1,13 @@
 from SCons.Script import DefaultEnvironment
-from shutil import copyfile
+import glob, shutil
 
 env = DefaultEnvironment()
 # uncomment line below to see environment variables
 # print env.Dump()
 # print ARGUMENTS
 
-copyfile("/Users/Nat/Documents/Arduino/libraries/WiFiConnector/src/WiFiConnector.h",
- "/Users/Nat/Documents/Arduino/libraries/WiFiConnector/tmp/WiFiConnector/WiFiConnector.h")
+# copyfile("src/WiFiConnector.h", "tmp/WiFiConnector/WiFiConnector.h")
+# copyfile("src/WiFiConnector.cpp", "tmp/WiFiConnector/WiFiConnector.cpp")
 
-copyfile("/Users/Nat/Documents/Arduino/libraries/WiFiConnector/src/WiFiConnector.cpp",
- "/Users/Nat/Documents/Arduino/libraries/WiFiConnector/tmp/WiFiConnector/WiFiConnector.cpp")
+# for file in glob.iglob('src/*.*'):
+#     shutil.copy2(file, "tmp/WiFiConnector")
