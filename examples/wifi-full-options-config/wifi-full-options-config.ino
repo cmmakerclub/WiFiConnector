@@ -22,9 +22,21 @@ void init_hardware()
 
 void setup()
 {
+  WiFi.disconnect(true);
   init_hardware();
-  // wifi.begin();
-  // wifi.init();
+
+
+  wifi.on_connected([&](const void* message)
+  {
+    // Print the IP address
+    Serial.print("XXXXXXXX: WIFI CONNECTED WITH IP: ");
+    Serial.println(WiFi.localIP());
+  });
+
+  wifi.init();
+
+  Serial.println("GOGOGO");
+  WiFi.begin("Nat", "123456789");
 }
 
 void loop()

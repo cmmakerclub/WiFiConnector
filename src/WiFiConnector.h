@@ -1,3 +1,6 @@
+#ifndef WIFI_CONNECTOR_H
+#define WIFI_CONNECTOR_H
+
 #include <Arduino.h>
 #include <functional>
 #include <ESP8266WiFi.h>
@@ -35,16 +38,21 @@ extern "C" {
 // } wl_status_t;
 
 
+typedef std::function<void(const void*)> wifi_callback_t;
+
 class WiFiConnector {
   private:
     String _ssid;
     String _passphase;
     WiFiConnector* s_instance;
     bool _initialised = false;
+    wifi_callback_t _user_on_disconnected = NULL;
+    wifi_callback_t _user_on_connected  = NULL;
+    wifi_callback_t _user_on_connecting = NULL;
+
   protected:
     WiFiConnector() { };
 public:
-    typedef std::function<void(const void*)> wifi_callback_t;
     uint32_t counter = 0;
     WiFiConnector(String, String);
     ~WiFiConnector(){
@@ -59,8 +67,9 @@ public:
       static WiFiConnector *s_instance = NULL;
       // Serial.println(s_instance, HEX);
       Serial.printf("addr: %x\r\n", s_instance);
-      if (!s_instance)
+      if (!s_instance) {
         s_instance = new WiFiConnector;
+      }
       Serial.printf("addr: %x\r\n", s_instance);
       return s_instance;
     }
@@ -68,6 +77,11 @@ public:
     void init();
     void loop();
 
+    void on_disconnected(wifi_callback_t callback = NULL);
+    void on_connected(wifi_callback_t callback = NULL);
+    void on_connecting(wifi_callback_t callback = NULL);
 };
 
 // WiFiConnector* WiFiConnector::s_instance = NULL;
+
+#endif /* WIFI_CONNECTOR_H */
