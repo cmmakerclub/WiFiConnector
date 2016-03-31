@@ -40,15 +40,23 @@ extern "C" {
 
 typedef std::function<void(const void*)> wifi_callback_t;
 
+
 class WiFiConnector {
   private:
     String _ssid;
     String _passphase;
     WiFiConnector* s_instance;
     bool _initialised = false;
+
     wifi_callback_t _user_on_disconnected = NULL;
     wifi_callback_t _user_on_connected  = NULL;
     wifi_callback_t _user_on_connecting = NULL;
+
+    typedef struct {
+      String ssid;
+      String pasphase;
+      WiFiConnector *instance;
+} Config;
 
   protected:
     WiFiConnector() { };
@@ -59,6 +67,7 @@ public:
       delete s_instance;
     };
 
+    String get(String);
     void setSsid(String);
     void setPasspharse(String);
 

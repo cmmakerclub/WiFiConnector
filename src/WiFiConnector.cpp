@@ -47,6 +47,18 @@ void WiFiConnector::setPasspharse(String pass){
   _passphase = pass;
 }
 
+String WiFiConnector::get(String key) {
+  if (key == "ssid") {
+    return WiFi.SSID();
+  }
+  else if (key == "psk") {
+    return WiFi.psk();
+  }
+  else {
+    return "";
+  }
+}
+
 void WiFiConnector::init() {
   _wifi = WiFiConnector::instance();
   _wifi->setSsid(_ssid);
@@ -56,48 +68,46 @@ void WiFiConnector::init() {
   WiFi.setAutoConnect(true);
   WiFi.setAutoReconnect(true);
 
-  static wifi_callback_t test = _user_on_connected;
   static WiFiConnector *_this = this;
   WiFi.onEvent([](WiFiEvent_t event) {
       Serial.printf("[WiFi-event] event: %d\n", event);
       switch (event) {
           case WIFI_EVENT_STAMODE_CONNECTED:
-            Serial.printf("%lu => WIFI_EVENT_STAMODE_CONNECTED\r\n", millis());
+            // Serial.printf("%lu => WIFI_EVENT_STAMODE_CONNECTED\r\n", millis());
             if (_this->_user_on_connected) {
               _this->_user_on_connected((void*)"CONNECTED");
             }
-            delay(100);
             break;
           case WIFI_EVENT_STAMODE_DISCONNECTED:
-            Serial.printf("%lu => WIFI_EVENT_STAMODE_DISCONNECTED\r\n", millis());
+            // Serial.printf("%lu => WIFI_EVENT_STAMODE_DISCONNECTED\r\n", millis());
             if (_this->_user_on_disconnected) {
               _this->_user_on_disconnected((void*)"DISCONNECTED");
             }
             break;
           case WIFI_EVENT_STAMODE_AUTHMODE_CHANGE:
-            Serial.printf("%lu => WIFI_EVENT_STAMODE_AUTHMODE_CHANGE\r\n", millis());
+            // Serial.printf("%lu => WIFI_EVENT_STAMODE_AUTHMODE_CHANGE\r\n", millis());
             break;
           case WIFI_EVENT_STAMODE_GOT_IP:
-            Serial.printf("%lu => WIFI_EVENT_STAMODE_GOT_IP: ", millis());
-            Serial.println(WiFi.localIP());
             if (_this->_user_on_connected) {
               _this->_user_on_connected((void*)"CONNECTED");
             }
+            // Serial.printf("%lu => WIFI_EVENT_STAMODE_GOT_IP: ", millis());
+            // Serial.println(WiFi.localIP());
             break;
           case WIFI_EVENT_STAMODE_DHCP_TIMEOUT:
-            Serial.printf("%lu => WIFI_EVENT_STAMODE_DHCP_TIMEOUT: ", millis());
+            // Serial.printf("%lu => WIFI_EVENT_STAMODE_DHCP_TIMEOUT: ", millis());
             break;
           case WIFI_EVENT_SOFTAPMODE_STACONNECTED:
-            Serial.printf("%lu => WIFI_EVENT_SOFTAPMODE_STACONNECTED: \r\n", millis());
+            // Serial.printf("%lu => WIFI_EVENT_SOFTAPMODE_STACONNECTED: \r\n", millis());
             break;
           case WIFI_EVENT_SOFTAPMODE_STADISCONNECTED:
-            Serial.printf("%lu => WIFI_EVENT_SOFTAPMODE_STADISCONNECTED: \r\n", millis());
+            // Serial.printf("%lu => WIFI_EVENT_SOFTAPMODE_STADISCONNECTED: \r\n", millis());
             break;
           case WIFI_EVENT_SOFTAPMODE_PROBEREQRECVED:
-            Serial.printf("%lu => WIFI_EVENT_SOFTAPMODE_PROBEREQRECVED: \r\n", millis());
+            // Serial.printf("%lu => WIFI_EVENT_SOFTAPMODE_PROBEREQRECVED: \r\n", millis());
             break;
           case WIFI_EVENT_MAX:
-            Serial.printf("%lu => WIFI_EVENT_MAX: \r\n", millis());
+            // Serial.printf("%lu => WIFI_EVENT_MAX: \r\n", millis());
             break;
           }
     });
