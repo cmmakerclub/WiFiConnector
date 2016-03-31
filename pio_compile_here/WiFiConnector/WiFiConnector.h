@@ -40,24 +40,46 @@ extern "C" {
 
 typedef std::function<void(const void*)> wifi_callback_t;
 
+
+class WiFiConnector;
+
+typedef struct {
+  String ssid;
+  String passphase;
+  WiFiConnector *instance;
+} Config;
+
 class WiFiConnector {
   private:
     String _ssid;
     String _passphase;
     WiFiConnector* s_instance;
     bool _initialised = false;
+    Config *_config;
+
     wifi_callback_t _user_on_disconnected = NULL;
     wifi_callback_t _user_on_connected  = NULL;
     wifi_callback_t _user_on_connecting = NULL;
+
+    wifi_callback_t _user_on_smartconfig_waiting;
+    wifi_callback_t _user_on_smartconfig_done;
+    wifi_callback_t _user_on_smartconfig_processing;
 
   protected:
     WiFiConnector() { };
 public:
     uint32_t counter = 0;
     WiFiConnector(String, String);
-    ~WiFiConnector(){
+    WiFiConnector(String, String, uint8_t);
+
+    ~WiFiConnector() {
       delete s_instance;
+      delete _config;
     };
+
+    String get(String);
+    String SSID();
+    String psk();
 
     void setSsid(String);
     void setPasspharse(String);
@@ -76,10 +98,15 @@ public:
 
     void init();
     void loop();
+    void connect();
 
     void on_disconnected(wifi_callback_t callback = NULL);
     void on_connected(wifi_callback_t callback = NULL);
     void on_connecting(wifi_callback_t callback = NULL);
+
+    void on_smartconfig_waiting(wifi_callback_t callback = NULL);
+    void on_smartconfig_done(wifi_callback_t callback = NULL);
+    void on_smartconfig_processing(wifi_callback_t callback = NULL);
 };
 
 // WiFiConnector* WiFiConnector::s_instance = NULL;

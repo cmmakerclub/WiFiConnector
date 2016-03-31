@@ -37,6 +37,16 @@ WiFiConnector *_wifi = NULL;
 WiFiConnector::WiFiConnector(String ssid, String password) {
   _ssid = ssid;
   _passphase = password;
+
+  _config = new Config;
+  _config->instance = this;
+  _config->ssid = ssid;
+  _config->passphase = password;
+
+};
+
+WiFiConnector::WiFiConnector(String ssid, String password, uint8_t pin) {
+  WiFiConnector(ssid, password);   
 };
 
 void WiFiConnector::setSsid(String ssid){
@@ -57,6 +67,13 @@ String WiFiConnector::get(String key) {
   else {
     return "";
   }
+}
+
+String WiFiConnector::psk() {
+  return WiFi.psk();
+}
+String WiFiConnector::SSID() {
+  return WiFi.SSID();
 }
 
 void WiFiConnector::init() {
@@ -122,6 +139,10 @@ void WiFiConnector::loop() {
   }
 }
 
+void WiFiConnector::connect() {
+
+}
+
 void WiFiConnector::on_disconnected(wifi_callback_t callback)
 {
     _user_on_disconnected = callback;
@@ -136,6 +157,21 @@ void WiFiConnector::on_connected(wifi_callback_t callback)
 void WiFiConnector::on_connecting(wifi_callback_t callback)
 {
     _user_on_connecting = callback;
+}
+
+void WiFiConnector::on_smartconfig_waiting(wifi_callback_t callback) {
+  _user_on_smartconfig_waiting = callback;
+}
+
+void WiFiConnector::on_smartconfig_done(wifi_callback_t callback)
+{
+  _user_on_smartconfig_done = callback;
+}
+
+void WiFiConnector::on_smartconfig_processing(wifi_callback_t callback)
+{
+  Serial.println("SMARTCONFIG DONE.");
+  _user_on_smartconfig_processing = callback;
 }
 
 // #endif /* WIFI_CONNECTOR_H */

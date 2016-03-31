@@ -25,7 +25,6 @@ void setup()
   WiFi.disconnect(true);
   init_hardware();
 
-
   wifi.on_connected([&](const void* message)
   {
     // Print the IP address
@@ -34,6 +33,7 @@ void setup()
   });
 
   wifi.init();
+  Serial.println(wifi.get("ssid") + ", " + wifi.get("password"));
 
   Serial.println("GOGOGO");
   WiFi.begin("Nat", "123456789");
