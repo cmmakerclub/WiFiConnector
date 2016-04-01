@@ -46,7 +46,7 @@ WiFiConnector::WiFiConnector(String ssid, String password) {
 };
 
 WiFiConnector::WiFiConnector(String ssid, String password, uint8_t pin) {
-  WiFiConnector(ssid, password);   
+  WiFiConnector(ssid, password);
 };
 
 void WiFiConnector::setSsid(String ssid){
@@ -90,15 +90,20 @@ void WiFiConnector::init() {
       Serial.printf("[WiFi-event] event: %d\n", event);
       switch (event) {
           case WIFI_EVENT_STAMODE_CONNECTED:
-            // Serial.printf("%lu => WIFI_EVENT_STAMODE_CONNECTED\r\n", millis());
+            Serial.printf("%lu => WIFI_EVENT_STAMODE_CONNECTED\r\n", millis());
             if (_this->_user_on_connected) {
-              _this->_user_on_connected((void*)"CONNECTED");
+              // _this->_user_on_connected((void*)"CONNECTED");
+              // _this->_connected = true;
+            }
+            else {
+
             }
             break;
           case WIFI_EVENT_STAMODE_DISCONNECTED:
-            // Serial.printf("%lu => WIFI_EVENT_STAMODE_DISCONNECTED\r\n", millis());
+            Serial.printf("%lu => WIFI_EVENT_STAMODE_DISCONNECTED\r\n", millis());
+            _this->_connected = false;
             if (_this->_user_on_disconnected) {
-              _this->_user_on_disconnected((void*)"DISCONNECTED");
+              _this->_user_on_disconnected((void*)"..DISCONNECTED");
             }
             break;
           case WIFI_EVENT_STAMODE_AUTHMODE_CHANGE:
@@ -107,6 +112,7 @@ void WiFiConnector::init() {
           case WIFI_EVENT_STAMODE_GOT_IP:
             if (_this->_user_on_connected) {
               _this->_user_on_connected((void*)"CONNECTED");
+              _this->_connected = true;
             }
             // Serial.printf("%lu => WIFI_EVENT_STAMODE_GOT_IP: ", millis());
             // Serial.println(WiFi.localIP());
@@ -137,10 +143,22 @@ void WiFiConnector::loop() {
     }
     return;
   }
+
+  if (_connected == false) {
+    if (_user_on_connecting) {
+      _user_on_connecting((void*) "CONNECTING...");
+    }
+  }
+
+  WiFi.status();
 }
 
 void WiFiConnector::connect() {
+  WiFi.begin(_config->ssid.c_str(), _config->passphase.c_str());
+}
 
+void WiFiConnector::disconnect(bool wifioff) {
+  WiFi.disconnect(wifioff);
 }
 
 void WiFiConnector::on_disconnected(wifi_callback_t callback)

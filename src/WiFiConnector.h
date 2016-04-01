@@ -55,6 +55,7 @@ class WiFiConnector {
     String _passphase;
     WiFiConnector* s_instance;
     bool _initialised = false;
+    bool _connected = false;
     Config *_config;
 
     wifi_callback_t _user_on_disconnected = NULL;
@@ -87,7 +88,6 @@ public:
     static WiFiConnector* instance()
     {
       static WiFiConnector *s_instance = NULL;
-      // Serial.println(s_instance, HEX);
       Serial.printf("addr: %x\r\n", s_instance);
       if (!s_instance) {
         s_instance = new WiFiConnector;
@@ -99,6 +99,7 @@ public:
     void init();
     void loop();
     void connect();
+    void disconnect(bool wifioff = false);
 
     void on_disconnected(wifi_callback_t callback = NULL);
     void on_connected(wifi_callback_t callback = NULL);

@@ -4,10 +4,11 @@
 #include <ESP8266WiFi.h>
 #include <WiFiConnector.h>
 
-WiFiConnector wifi("SSID", "PASSEORD");
+WiFiConnector wifi("Nat", "123456789");
 
 #define WIFI_SSID        ""
 #define WIFI_PASSPHARSE  ""
+
 uint8_t SMARTCONFIG_BUTTON_PIN = 0;
 
 void init_hardware()
@@ -25,18 +26,23 @@ void setup()
   WiFi.disconnect(true);
   init_hardware();
 
+  wifi.init();
+
   wifi.on_connected([&](const void* message)
   {
-    // Print the IP address
     Serial.print("XXXXXXXX: WIFI CONNECTED WITH IP: ");
     Serial.println(WiFi.localIP());
   });
 
-  wifi.init();
+  wifi.on_connecting([&](const void* message)
+  {
+    Serial.println("WIFI CONNECTING..");
+    delay(200);
+  });
+
   Serial.println(wifi.get("ssid") + ", " + wifi.get("password"));
 
-  Serial.println("GOGOGO");
-  WiFi.begin("Nat", "123456789");
+  wifi.connect();
 }
 
 void loop()
