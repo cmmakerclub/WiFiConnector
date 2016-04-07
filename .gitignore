@@ -1,6 +1,5 @@
 .pioenvs
 .clang_complete
 .gcc-flags.json
-pio_compile_here
 pio_compile_here/WiFiConnector/WiFiConnector.cpp
 pio_compile_here/WiFiConnector/WiFiConnector.h
