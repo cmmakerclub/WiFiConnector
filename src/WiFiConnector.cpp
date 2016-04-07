@@ -32,7 +32,7 @@ THE SOFTWARE.
 #include "WiFiConnector.h"
 
 // static WiFiConnector* __wifi_connector = NULL;
-WiFiConnector *_wifi = NULL;
+static WiFiConnector *_wifi = NULL;
 
 WiFiConnector::WiFiConnector(String ssid, String password) {
   _ssid = ssid;
@@ -61,7 +61,7 @@ String WiFiConnector::get(String key) {
   if (key == "ssid") {
     return WiFi.SSID();
   }
-  else if (key == "psk") {
+  else if (key == "psk" || key == "password" || key == "passpharse") {
     return WiFi.psk();
   }
   else {

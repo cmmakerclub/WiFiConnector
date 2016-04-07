@@ -6,14 +6,10 @@
 
 WiFiConnector wifi("Nat", "123456789");
 
-#define WIFI_SSID        ""
-#define WIFI_PASSPHARSE  ""
-
-uint8_t SMARTCONFIG_BUTTON_PIN = 0;
-
 void init_hardware()
 {
   Serial.begin(115200);
+  WiFi.disconnect(true);
   delay(1000);
   Serial.flush();
   Serial.println();
@@ -21,27 +17,27 @@ void init_hardware()
   Serial.println("will be started in 500ms..");
 }
 
-void setup()
-{
-  WiFi.disconnect(true);
-  init_hardware();
-
+void init_wifi() {
   wifi.init();
 
   wifi.on_connected([&](const void* message)
   {
-    Serial.print("XXXXXXXX: WIFI CONNECTED WITH IP: ");
+    Serial.print("WIFI CONNECTED WITH IP: ");
     Serial.println(WiFi.localIP());
   });
 
   wifi.on_connecting([&](const void* message)
   {
-    Serial.println("WIFI CONNECTING..");
+    Serial.print("Connecting to ");
+    Serial.println(wifi.get("ssid") + ", " + wifi.get("password"));
     delay(200);
   });
+}
 
-  Serial.println(wifi.get("ssid") + ", " + wifi.get("password"));
-
+void setup()
+{
+  init_hardware();
+  init_wifi();
   wifi.connect();
 }
 
