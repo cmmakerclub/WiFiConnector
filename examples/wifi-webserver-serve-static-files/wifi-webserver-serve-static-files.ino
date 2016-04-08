@@ -61,24 +61,24 @@ void init_wifi() {
       String ms = String(millis());
       sprintf(buff, "{\"millis\": %s }", ms.c_str());
       server.send ( 200, "text/plain", buff );
-    } );
+    });
 
     server.on ( "/atmosphere", []() {
       char buff[100];
       String ms = String(millis());
       sprintf(buff, "{\"millis\": %s, \"temp\": %s, \"humid\": %s}",
-        ms.c_str(), "99.9", "55.5");
+      ms.c_str(), "99.9", "55.5");
       server.send ( 200, "text/plain", buff );
     });
 
     server.on ( "/hello", []() {
       server.send ( 200, "text/plain", String("Hi, there"));
-    } );
+    });
 
     server.serveStatic("/", SPIFFS, "/");
     server.begin();
 
-    Serial.println("SERVER BeGIN");
+    Serial.println("SERVER Started.");
   });
 }
 
@@ -86,16 +86,11 @@ void setup()
 {
   init_hardware();
   init_wifi();
-
-  Serial.print("CONNECTING TO ");
-  Serial.println(wifi.SSID() + ", " + wifi.psk());
-
   wifi.connect();
-
 }
 
 void loop()
 {
-  server.handleClient();
   wifi.loop();
+  server.handleClient();
 }
