@@ -4,7 +4,7 @@
 #include <ESP8266WiFi.h>
 #include <WiFiConnector.h>
 
-WiFiConnector wifi("DEAWARE_MAIN", "DEAW1234567890");
+WiFiConnector wifi("Nat", "123456789");
 
 void init_hardware()
 {
