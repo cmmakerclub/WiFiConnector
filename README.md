@@ -24,7 +24,7 @@ WiFi Connector เป็น Arduino Library สำหรับ ESP8266 ที่
 
 ## ตัวอย่างการใช้งาน
 
-[examples/wifi-full-options-config](https://github.com/cmmakerclub/WiFiConnector/tree/master/examples/wifi-full-options-config.ino)
+[examples/wifi-full-options-config](https://github.com/cmmakerclub/WiFiConnector/tree/master/examples/wifi-full-options-config)
 
 ## อ่านบันเรื่องราว อัพเดต และอ่านเพิ่มเติม
 
