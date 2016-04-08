@@ -10,11 +10,11 @@ cache:
 
 
 env:
+    - PLATFORMIO_CI_SRC=examples/wifi-basic
     - PLATFORMIO_CI_SRC=examples/wifi-full-options-config
-    - PLATFORMIO_CI_SRC=examples/wifi-telnet
+    - PLATFORMIO_CI_SRC=examples/wifi-basic-http-get
     - PLATFORMIO_CI_SRC=examples/wifi-webserver-serve-static-files
 install:
     - pip install -U platformio
 script:
     - platformio ci --board=espresso_lite_v1 --board=espresso_lite_v2 --lib="."
-   
