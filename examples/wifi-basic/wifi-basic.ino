@@ -19,7 +19,6 @@ void init_hardware()
 
 void init_wifi() {
   wifi.init();
-
   wifi.on_connected([&](const void* message)
   {
     Serial.print("WIFI CONNECTED WITH IP: ");

@@ -6,8 +6,7 @@
 #include <ESP8266WiFi.h>
 #include <ESP8266WebServer.h>
 #include <Ticker.h>
-// #define nullptr NULL
-//#define WIFI_DEBUG_MODE
+//#define WIFI_CONNECTOR_DEBUG_MODE
 using namespace std;
 
 #ifdef ESP8266
@@ -16,13 +15,13 @@ extern "C" {
 }
 #endif
 
-#ifdef WIFI_DEBUG_MODE
-    #define WIFI_DEBUG_PRINTER Serial
-    #define WIFI_DEBUG_PRINT(...) { WIFI_DEBUG_PRINTER.print(__VA_ARGS__); }
-    #define WIFI_DEBUG_PRINTLN(...) { WIFI_DEBUG_PRINTER.println(__VA_ARGS__); }
+#ifdef WIFI_CONNECTOR_DEBUG_MODE
+    #define DEBUG_PRINTER Serial
+    #define DEBUG_PRINT(...) { DEBUG_PRINTER.print(__VA_ARGS__); }
+    #define DEBUG_PRINTLN(...) { DEBUG_PRINTER.println(__VA_ARGS__); }
 #else
-    #define WIFI_DEBUG_PRINT(...) { }
-    #define WIFI_DEBUG_PRINTLN(...) { }
+    #define DEBUG_PRINT(...) { }
+    #define DEBUG_PRINTLN(...) { }
 #endif
 
 // TYPES
@@ -56,6 +55,7 @@ class WiFiConnector {
     WiFiConnector* s_instance;
     bool _initialised = false;
     bool _connected = false;
+    bool _got_ip = false;
     Config *_config;
 
     wifi_callback_t _user_on_disconnected = NULL;

@@ -61,11 +61,12 @@ String WiFiConnector::get(String key) {
   if (key == "ssid") {
     return WiFi.SSID();
   }
+  // backward compatibility
   else if (key == "psk" || key == "password" || key == "passpharse") {
     return WiFi.psk();
   }
   else {
-    return "";
+    return "WRONG argument.";
   }
 }
 
@@ -87,11 +88,14 @@ void WiFiConnector::init() {
 
   static WiFiConnector *_this = this;
   WiFi.onEvent([](WiFiEvent_t event) {
-      Serial.printf("[WiFi-event] event: %d\n", event);
+      DEBUG_PRINT("[WiFi-event] event: ");
+      DEBUG_PRINTLN(event);
       switch (event) {
           case WIFI_EVENT_STAMODE_CONNECTED:
-            Serial.printf("%lu => WIFI_EVENT_STAMODE_CONNECTED\r\n", millis());
+            DEBUG_PRINTLN("DEBUG: WIFI_EVENT_STAMODE_CONNECTED");
+            _wifi->_connected = true;
             if (_this->_user_on_connected) {
+              // DEBUG_PRINTLN("DEBUG: STAMOD_CONNECTED.");
               // _this->_user_on_connected((void*)"CONNECTED");
               // _this->_connected = true;
             }
@@ -100,10 +104,13 @@ void WiFiConnector::init() {
             }
             break;
           case WIFI_EVENT_STAMODE_DISCONNECTED:
-            Serial.printf("%lu => WIFI_EVENT_STAMODE_DISCONNECTED\r\n", millis());
+            // Serial.printf("%lu => WIFI_EVENT_STAMODE_DISCONNECTED\r\n", millis());
+            DEBUG_PRINTLN("DEBUG: WIFI_EVENT_STAMODE_DISCONNECTED");
             _this->_connected = false;
+            _wifi->_got_ip = false;
             if (_this->_user_on_disconnected) {
               _this->_user_on_disconnected((void*)"..DISCONNECTED");
+              DEBUG_PRINTLN("DEBUG: DISCONNECTED");
             }
             break;
           case WIFI_EVENT_STAMODE_AUTHMODE_CHANGE:
@@ -112,6 +119,8 @@ void WiFiConnector::init() {
           case WIFI_EVENT_STAMODE_GOT_IP:
             if (_this->_user_on_connected) {
               _this->_user_on_connected((void*)"CONNECTED");
+              DEBUG_PRINTLN("DEBUG: CONNECTED");
+              _wifi->_got_ip = true;
               _this->_connected = true;
             }
             // Serial.printf("%lu => WIFI_EVENT_STAMODE_GOT_IP: ", millis());
@@ -139,18 +148,17 @@ void WiFiConnector::init() {
 void WiFiConnector::loop() {
   if (_initialised == false) {
     if (millis() % 1000 == 0) {
-      Serial.println("not initialized.");
+      DEBUG_PRINTLN("DEBUG: not initialized.");
     }
     return;
   }
 
-  if (_connected == false) {
+  if (_wifi->_connected == false) {
     if (_user_on_connecting) {
       _user_on_connecting((void*) "CONNECTING...");
+      DEBUG_PRINTLN("DEBUG: CONNECTING..");
     }
   }
-
-  WiFi.status();
 }
 
 void WiFiConnector::connect() {
@@ -168,8 +176,8 @@ void WiFiConnector::on_disconnected(wifi_callback_t callback)
 
 void WiFiConnector::on_connected(wifi_callback_t callback)
 {
-  Serial.println("SET CALLBACK on_connected");
-    _user_on_connected = callback;
+  DEBUG_PRINTLN("SET CALLBACK on_connected");
+  _user_on_connected = callback;
 }
 
 void WiFiConnector::on_connecting(wifi_callback_t callback)
@@ -188,7 +196,7 @@ void WiFiConnector::on_smartconfig_done(wifi_callback_t callback)
 
 void WiFiConnector::on_smartconfig_processing(wifi_callback_t callback)
 {
-  Serial.println("SMARTCONFIG DONE.");
+  DEBUG_PRINTLN("SMARTCONFIG DONE.");
   _user_on_smartconfig_processing = callback;
 }
 
