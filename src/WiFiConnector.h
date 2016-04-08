@@ -99,6 +99,7 @@ public:
     void init();
     void loop();
     void connect();
+    bool connected();
     void disconnect(bool wifioff = false);
 
     void on_disconnected(wifi_callback_t callback = NULL);

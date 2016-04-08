@@ -87,6 +87,7 @@ void WiFiConnector::init() {
   WiFi.setAutoReconnect(true);
 
   static WiFiConnector *_this = this;
+
   WiFi.onEvent([](WiFiEvent_t event) {
       DEBUG_PRINT("[WiFi-event] event: ");
       DEBUG_PRINTLN(event);
@@ -106,8 +107,11 @@ void WiFiConnector::init() {
           case WIFI_EVENT_STAMODE_DISCONNECTED:
             // Serial.printf("%lu => WIFI_EVENT_STAMODE_DISCONNECTED\r\n", millis());
             DEBUG_PRINTLN("DEBUG: WIFI_EVENT_STAMODE_DISCONNECTED");
-            _this->_connected = false;
+            _wifi->_connected = false;
             _wifi->_got_ip = false;
+
+            _this->_connected = false;
+            _this->_got_ip = false;
             if (_this->_user_on_disconnected) {
               _this->_user_on_disconnected((void*)"..DISCONNECTED");
               DEBUG_PRINTLN("DEBUG: DISCONNECTED");
@@ -120,8 +124,12 @@ void WiFiConnector::init() {
             if (_this->_user_on_connected) {
               _this->_user_on_connected((void*)"CONNECTED");
               DEBUG_PRINTLN("DEBUG: CONNECTED");
-              _wifi->_got_ip = true;
+              _this->_got_ip = true;
               _this->_connected = true;
+
+              _wifi->_got_ip = true;
+              _wifi->_connected = true;
+
             }
             // Serial.printf("%lu => WIFI_EVENT_STAMODE_GOT_IP: ", millis());
             // Serial.println(WiFi.localIP());
@@ -163,6 +171,11 @@ void WiFiConnector::loop() {
 
 void WiFiConnector::connect() {
   WiFi.begin(_config->ssid.c_str(), _config->passphase.c_str());
+}
+
+bool WiFiConnector::connected() {
+  // return _wifi->_got_ip;
+  return this->_got_ip;
 }
 
 void WiFiConnector::disconnect(bool wifioff) {
