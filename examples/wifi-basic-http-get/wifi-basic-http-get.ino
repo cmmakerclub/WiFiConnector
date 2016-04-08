@@ -37,31 +37,31 @@ void init_wifi() {
 
 
 void doHttpGet() {
-        HTTPClient http;
-        Serial.print("[HTTP] begin...\n");
-        // configure traged server and url
-        //http.begin("https://192.168.1.12/test.html", "7a 9c f4 db 40 d3 62 5a 6e 21 bc 5c cc 66 c8 3e a1 45 59 38"); //HTTPS
-        http.begin("http://cmmc.xyz/hello.txt"); //HTTP
-        
-        // start connection and send HTTP header
-        int httpCode = http.GET();
+  HTTPClient http;
+  Serial.print("[HTTP] begin...\n");
+  // configure traged server and url
+  //http.begin("https://192.168.1.12/test.html", "7a 9c f4 db 40 d3 62 5a 6e 21 bc 5c cc 66 c8 3e a1 45 59 38"); //HTTPS
+  http.begin("http://cmmc.xyz/hello.txt"); //HTTP
 
-        // httpCode will be negative on error
-        if(httpCode > 0) {
-            // HTTP header has been send and Server response header has been handled
-            Serial.printf("[HTTP] GET... code: %d\n", httpCode);
-            Serial.print("[CONTENT]\n");
+  // start connection and send HTTP header
+  int httpCode = http.GET();
 
-            // file found at server
-            if(httpCode == HTTP_CODE_OK) {
-                String payload = http.getString();
-                Serial.println(payload);
-            }
-        } else {
-            Serial.printf("[HTTP] GET... failed, error: %s\n", http.errorToString(httpCode).c_str());
-        }
+  // httpCode will be negative on error
+  if(httpCode > 0) {
+      // HTTP header has been send and Server response header has been handled
+      Serial.printf("[HTTP] GET... code: %d\n", httpCode);
+      Serial.print("[CONTENT]\n");
 
-        http.end();
+      // file found at server
+      if(httpCode == HTTP_CODE_OK) {
+          String payload = http.getString();
+          Serial.println(payload);
+      }
+  } else {
+      Serial.printf("[HTTP] GET... failed, error: %s\n", http.errorToString(httpCode).c_str());
+  }
+
+  http.end();
 }
 
 void setup()
