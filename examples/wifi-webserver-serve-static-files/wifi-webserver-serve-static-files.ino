@@ -5,7 +5,7 @@
 #include <ESP8266WebServer.h>
 #include "FS.h"
 
-WiFiConnector wifi("DEAWARE_MAIN", "DEAW1234567890");
+WiFiConnector wifi(WIFI_SSID, WIFI_PASSPHRASE);
 ESP8266WebServer server(80);
 
 void fail(const char* msg) {

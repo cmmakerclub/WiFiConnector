@@ -6,7 +6,7 @@
 #include <ESP8266HTTPClient.h>
 
 
-WiFiConnector wifi("Nat", "123456789");
+WiFiConnector wifi(WIFI_SSID, WIFI_PASSPHRASE);
 
 void init_hardware()
 {

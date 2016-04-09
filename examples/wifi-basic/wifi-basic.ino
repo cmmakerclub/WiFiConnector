@@ -4,7 +4,7 @@
 #include <ESP8266WiFi.h>
 #include <WiFiConnector.h>
 
-WiFiConnector wifi("Nat", "1234567890");
+WiFiConnector wifi(WIFI_SSID, WIFI_PASSPHRASE);
 
 void init_hardware()
 {
