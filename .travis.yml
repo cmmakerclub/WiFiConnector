@@ -18,3 +18,4 @@ install:
     - pip install -U platformio
 script:
     - platformio ci --board=espresso_lite_v1 --board=espresso_lite_v2 --lib="."
+    export PLATFORMIO_BUILD_FLAGS='-DWIFI_SSID="Nat"' '-DWIFI_PASSPHRASE="123456789"'
