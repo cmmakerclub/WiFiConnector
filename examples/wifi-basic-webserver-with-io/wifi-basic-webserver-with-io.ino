@@ -1,6 +1,7 @@
 // Copyright Nat Weerawan 2015-2016
 // MIT License
 
+#include <Arduino.h>
 #include <WiFiConnector.h>
 #include <ESP8266WebServer.h>
 

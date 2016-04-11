@@ -9,4 +9,4 @@ if not os.path.exists("pio_compile_here/WiFiConnector"):
 
 for file in glob.iglob('src/*.*'):
     print 'Copied %s' % (file)
-    shutil.copy2(file, ".")
+    shutil.copy2(file, "pio_compile_here/WiFiConnector")
