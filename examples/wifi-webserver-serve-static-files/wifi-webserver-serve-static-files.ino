@@ -5,6 +5,11 @@
 #include <ESP8266WebServer.h>
 #include "FS.h"
 
+#ifndef WIFI_SSID
+  #define WIFI_SSID       "Nat"
+  #define WIFI_PASSPHRASE "1234567890"
+#endif
+
 WiFiConnector wifi(WIFI_SSID, WIFI_PASSPHRASE);
 ESP8266WebServer server(80);
 

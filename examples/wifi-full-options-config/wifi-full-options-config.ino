@@ -4,6 +4,11 @@
 #include <ESP8266WiFi.h>
 #include <WiFiConnector.h>
 
+#ifndef WIFI_SSID
+  #define WIFI_SSID       "Nat"
+  #define WIFI_PASSPHRASE "1234567890"
+#endif
+
 WiFiConnector wifi("Nat", "123456789");
 
 void init_hardware()
