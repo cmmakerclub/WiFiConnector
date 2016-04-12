@@ -20,5 +20,6 @@ install:
 script:
     - python extra_ci.py
     - find .
+    - platformio run --target clean
     - platformio ci --board=espresso_lite_v2 --lib="."
     # - export PLATFORMIO_BUILD_FLAGS='-DWIFI_SSID="Nat" -DWIFI_PASSPHRASE="123456789"'
