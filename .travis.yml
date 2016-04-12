@@ -18,6 +18,8 @@ env:
 install:
     - pip install -U platformio
 script:
+    - find .
+    - rm -rvf pio_compile_here
     - python extra_ci.py
     - find .
     - platformio run --target clean
