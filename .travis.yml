@@ -13,6 +13,7 @@ env:
     - PLATFORMIO_CI_SRC=examples/wifi-basic-http-get
     - PLATFORMIO_CI_SRC=examples/wifi-webserver-with-io
     - PLATFORMIO_CI_SRC=examples/wifi-webserver-with-html
+    - PLATFORMIO_CI_SRC=examples/wifi-webserver-with-basic-angularjs
     - PLATFORMIO_CI_SRC=examples/wifi-webserver-serve-static-files
 install:
     - pip install -U platformio
