@@ -11,18 +11,14 @@ env:
     - PLATFORMIO_CI_SRC=examples/wifi-basic
     - PLATFORMIO_CI_SRC=examples/wifi-full-options-config
     - PLATFORMIO_CI_SRC=examples/wifi-basic-http-get
-    - PLATFORMIO_CI_SRC=examples/wifi-webserver-with-io/wifi-webserver-with-io.ino
-    - PLATFORMIO_CI_SRC=examples/wifi-webserver-with-html/wifi-webserver-with-html.ino
-    - PLATFORMIO_CI_SRC=examples/wifi-webserver-with-basic-angularjs
     - PLATFORMIO_CI_SRC=examples/wifi-webserver-serve-static-files
+    - PLATFORMIO_CI_SRC=examples/wifi-basic-webserver/with-basic-angularjs
+    - PLATFORMIO_CI_SRC=examples/wifi-basic-webserver/with-basic-html
+    - PLATFORMIO_CI_SRC=examples/wifi-basic-webserver/with-basic-io
 install:
     - pip install -U platformio
 script:
-    - find .
-    - rm -rvf pio_compile_here
     - python extra_ci.py
     - find .
-    - platformio run --target clean
-    - platformio ci --board=espresso_lite_v2 --lib="." --verbose
-    # - platformio ci --board=espresso_lite_v2 --lib="pio_compile_here"
+    - platformio ci --board=espresso_lite_v2 --lib="."
     # - export PLATFORMIO_BUILD_FLAGS='-DWIFI_SSID="Nat" -DWIFI_PASSPHRASE="123456789"'
