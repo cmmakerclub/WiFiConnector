@@ -7,8 +7,6 @@ sudo: false
 cache:
     directories:
         - "~/.platformio"
-
-
 env:
     - PLATFORMIO_CI_SRC=examples/wifi-basic
     - PLATFORMIO_CI_SRC=examples/wifi-full-options-config

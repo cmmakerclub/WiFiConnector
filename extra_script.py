@@ -1,5 +1,5 @@
 from SCons.Script import DefaultEnvironment
-import glob, shutil
+import glob, shutil, os
 
 env = DefaultEnvironment()
 # uncomment line below to see environment variables
