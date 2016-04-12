@@ -11,8 +11,8 @@ env:
     - PLATFORMIO_CI_SRC=examples/wifi-basic
     - PLATFORMIO_CI_SRC=examples/wifi-full-options-config
     - PLATFORMIO_CI_SRC=examples/wifi-basic-http-get
-    - PLATFORMIO_CI_SRC=examples/wifi-webserver-with-io
-    - PLATFORMIO_CI_SRC=examples/wifi-webserver-with-html
+    - PLATFORMIO_CI_SRC=examples/wifi-webserver-with-io/wifi-webserver-with-io.ino
+    - PLATFORMIO_CI_SRC=examples/wifi-webserver-with-html/wifi-webserver-with-html.ino
     - PLATFORMIO_CI_SRC=examples/wifi-webserver-with-basic-angularjs
     - PLATFORMIO_CI_SRC=examples/wifi-webserver-serve-static-files
 install:
