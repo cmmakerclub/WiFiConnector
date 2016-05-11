@@ -23,7 +23,7 @@ void init_hardware()
 }
 
 void init_webserver() {
-  server.on ( "/", []() {
+  server.on ("/", []() {
     static String responseHTML = F(""
     "<!doctype html>"
     "<html>"
@@ -52,15 +52,16 @@ void init_webserver() {
     "   });"
     "</script>"
     "  </head>"
-    "  <body ng-app"
+    "  <body ng-app=\"NatApp\">"
     "  <h1>Hello World!</h1><p>This is an esp8266 webpage example."
     "  that you can embeded angular application inside! </p>"
     "  <h1>ESP8266 WebServer + AngularJS</h1>"
-    "    <div>"
+    "   <div ng-controller=\"CMMCController\">"
     "      <label>Input your name:</label>"
     "      <input type='text' ng-model='yourName' placeholder='Enter a name here'>"
     "      <hr>"
-    "      <h1>Hello {{yourName}}!</h1>"
+    "      <h1>[{{millis}}] Hello, {{yourName}}</h1>"
+    "      <img src=\"https://www.cmmakerclub.com/wp-content/uploads/2014/07/logo1.png\" />"
     "    </div>"
     "  </body>"
     "</html>");
