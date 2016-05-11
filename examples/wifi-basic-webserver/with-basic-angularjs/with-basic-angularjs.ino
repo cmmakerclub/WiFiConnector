@@ -52,7 +52,8 @@ void init_webserver() {
     "  </head>"
     "  <body ng-app=\"NatApp\">"
     "<div ng-controller=\"CMMCController\">"
-    "  <h1>CMMC Controller: <span>millis() = {{ millis }}</span>  </h1>"
+    "  <h1>CMMC Controller: </h1>"
+    "  <h2><span>millis() = {{ millis }}</span>  </h2>"
     "</div>"
     "  </body>"
     "</html>");
