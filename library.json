@@ -1,5 +1,5 @@
 {
-    "name": "CMMC WiFi Connector",
+    "name": "WiFiConnector",
     "keywords": "wifi, wifi manager, wifi connector",
     "description": "A CMMC WiFi Connect (formerly known as WiFi Connector ESP8266)",
     "repository":
