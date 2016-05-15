@@ -94,7 +94,6 @@ void WiFiConnector::init() {
       switch (event) {
           case WIFI_EVENT_STAMODE_CONNECTED:
             DEBUG_PRINTLN("DEBUG: WIFI_EVENT_STAMODE_CONNECTED");
-            _wifi->_connected = true;
             if (_this->_user_on_connected) {
               // DEBUG_PRINTLN("DEBUG: STAMOD_CONNECTED.");
               // _this->_user_on_connected((void*)"CONNECTED");
